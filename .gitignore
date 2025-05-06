@@ -1,0 +1,14 @@
+# Archivos y carpetas generados por Visual Studio y .NET
+bin/
+obj/
+.vs/
+*.user
+*.userprefs
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+
+# Archivos de sistema macOS
+.DS_Store 
