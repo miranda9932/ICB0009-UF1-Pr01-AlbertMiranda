@@ -104,7 +104,7 @@ Mostramos el resultado de la verificación y el mensaje solo si la firma es vál
      ```
    - **Código implementado**: El método `ComprobarFirma` utiliza `RSA.VerifyData` con la clave pública del emisor para verificar que la firma corresponda al mensaje descifrado. Verifica que el hash SHA512 del mensaje coincida con el hash descifrado de la firma, lo que confirma la autenticidad e integridad.
 
-# Respuesta: Métodos redundantes en la clase asimétrica
+# ¿Crees que alguno de los métodos programado en la clase asimétrica se podría eliminar por carecer de una utilidad real?
 
 Tres métodos de la clase `ClaveAsimetrica` carecen de utilidad real:
 
