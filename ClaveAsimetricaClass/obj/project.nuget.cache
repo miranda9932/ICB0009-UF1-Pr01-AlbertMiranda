@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "Gd0GMjeuN32PTV9pSxzDbXsmQzW1i6uGNWzP97eV9Zo42wRcsl+b+WjZa6Zhk3bQlnjSsZ7A25uft6h0LlDLuw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\roger\\Dropbox\\La Salle - Online\\2023-2024\\Prácticas\\UF1\\ICB0009-UF1-Pr01 Enunciado\\ClaveAsimetricaClass\\ClaveAsimetricaClass.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\roger\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.28\\microsoft.netcore.app.ref.6.0.28.nupkg.sha512",
+    "C:\\Users\\roger\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.28\\microsoft.windowsdesktop.app.ref.6.0.28.nupkg.sha512",
+    "C:\\Users\\roger\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.28\\microsoft.aspnetcore.app.ref.6.0.28.nupkg.sha512"
+  ],
+  "logs": []
+}
