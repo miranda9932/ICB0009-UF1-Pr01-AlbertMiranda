@@ -29,7 +29,6 @@ Convertimos el texto a bytes para poder firmarlo:
 2. **Cifrado del mensaje con clave simétrica**:
    - Se cifra el mensaje original utilizando el algoritmo AES
    - Se usa la clave simétrica del emisor (Key + IV) para este proceso
-   - Este cifrado proporciona confidencialidad y es más eficiente para mensajes largos
    - **Código implementado**: 
 Utilizamos el método CifrarMensaje de la clase ClaveSimetrica que recibe el texto en claro y devuelve un array de bytes cifrados
      TextoCifrado = ClaveSimetricaEmisor.CifrarMensaje(TextoAEnviar);
@@ -76,8 +75,7 @@ Desciframos el IV usando la clave privada del receptor
    - Este paso recupera el contenido confidencial del mensaje
    - **Código implementado**:
 
-Desciframos el mensaje usando la clave simétrica recuperada
-El método devuelve directamente el texto descifrado como string
+Desciframos el mensaje usando la clave simétrica recuperada, el método devuelve directamente el texto descifrado como string
      string MensajeDescifrado = ClaveSimetricaReceptor.DescifrarMensaje(TextoCifrado);
      
 Convertimos el mensaje descifrado a bytes para poder verificar la firma
@@ -90,8 +88,7 @@ Convertimos el mensaje descifrado a bytes para poder verificar la firma
    - La verificación confirma que el mensaje es auténtico y no ha sido manipulado
    - **Código implementado**:
 
-    Verificamos la firma usando la clave pública del emisor
-    Esto garantiza que el mensaje fue firmado por el emisor y no ha sido alterado
+    Verificamos la firma usando la clave pública del emisor, esto garantiza que el mensaje fue firmado por el emisor y no ha sido alterado
      bool firmaValida = Receptor.ComprobarFirma(Firma, MensajeDescifrado_Bytes, Emisor.PublicKey);
      
 Mostramos el resultado de la verificación y el mensaje solo si la firma es válida
@@ -101,17 +98,17 @@ Mostramos el resultado de la verificación y el mensaje solo si la firma es vál
      } else {
          Console.WriteLine("La firma es INVÁLIDA. El mensaje podría haber sido alterado o no proviene del emisor esperado.");
      }
-     ```
    - **Código implementado**: El método `ComprobarFirma` utiliza `RSA.VerifyData` con la clave pública del emisor para verificar que la firma corresponda al mensaje descifrado. Verifica que el hash SHA512 del mensaje coincida con el hash descifrado de la firma, lo que confirma la autenticidad e integridad.
 
 # ¿Crees que alguno de los métodos programado en la clase asimétrica se podría eliminar por carecer de una utilidad real?
 
-Tres métodos de la clase `ClaveAsimetrica` carecen de utilidad real:
+Tres métodos de la clase `ClaveAsimetrica`:
 
-1. `FirmarMensaje(byte[], RSAParameters)`: Intenta firmar con clave pública, lo cual es criptográficamente incorrecto.
+1. `FirmarMensaje(byte[], RSAParameters)`: Intenta firmar con clave pública, lo cual no es lo mas correcto.
 
-2. `DescifrarMensaje(byte[], RSAParameters)`: Pretende descifrar con clave pública, una operación imposible en RSA.
+2. `DescifrarMensaje(byte[], RSAParameters)`: Pretende descifrar con clave pública, una operación complicada. 
 
 3. `CifrarMensaje(byte[])`: Cifra con la propia clave pública, cuando lo habitual es cifrar con la clave del destinatario.
+
 
 
