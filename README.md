@@ -24,7 +24,7 @@ Convertimos el texto a bytes para poder firmarlo:
     Este método utiliza internamente RSA.SignData con SHA512
      Firma = Emisor.FirmarMensaje(TextoAEnviar_Bytes);
 
-   - **Código implementado**: El método `FirmarMensaje` utiliza la clave privada RSA del emisor (accesible solo para él) para generar un hash SHA512 del mensaje y luego cifrar ese hash con su clave privada. Solo alguien con acceso a la clave pública del emisor podrá verificar esta firma.
+   - **Explicacion codigo**: El método `FirmarMensaje` utiliza la clave privada RSA del emisor (accesible solo para él) para generar un hash SHA512 del mensaje y luego cifrar ese hash con su clave privada. Solo alguien con acceso a la clave pública del emisor podrá verificar esta firma.
 
 2. **Cifrado del mensaje con clave simétrica**:
    - Se cifra el mensaje original utilizando el algoritmo AES
@@ -33,7 +33,7 @@ Convertimos el texto a bytes para poder firmarlo:
 Utilizamos el método CifrarMensaje de la clase ClaveSimetrica que recibe el texto en claro y devuelve un array de bytes cifrados
      TextoCifrado = ClaveSimetricaEmisor.CifrarMensaje(TextoAEnviar);
 
-   - **Código implementado**: Este método utiliza el algoritmo AES en modo CBC con la clave (`Key`) y el vector de inicialización (`IV`) generados aleatoriamente en la creación del objeto `ClaveSimetricaEmisor`. Internamente crea un encriptador AES que transforma el texto plano en bytes cifrados mediante un `CryptoStream`.
+   - **Explicacion código**: Este método utiliza el algoritmo AES en modo CBC con la clave (`Key`) y el vector de inicialización (`IV`) generados aleatoriamente en la creación del objeto `ClaveSimetricaEmisor`. Internamente crea un encriptador AES que transforma el texto plano en bytes cifrados mediante un `CryptoStream`.
 
 3. **Cifrado de la clave simétrica**:
    - La clave simétrica (tanto Key como IV) se cifra utilizando la clave pública RSA del receptor
@@ -47,7 +47,7 @@ Utilizamos el método CifrarMensaje de la clase ClaveSimetrica que recibe el tex
 También ciframos el vector de inicialización (IV) necesario para descifrar
      ClaveSimetricaIVCifrada = Emisor.CifrarMensaje(ClaveSimetricaEmisor.IV, Receptor.PublicKey);
 
-   - **Código implementado**: El método CifrarMensaje con dos parámetros utiliza la clave pública RSA del receptor para cifrar los bytes de la clave simétrica. Usa la función RSA.Encrypt para que solo quien posea la clave privada correspondiente pueda descifrar estos datos.
+   - **Explicacion código**: El método CifrarMensaje con dos parámetros utiliza la clave pública RSA del receptor para cifrar los bytes de la clave simétrica. Usa la función RSA.Encrypt para que solo quien posea la clave privada correspondiente pueda descifrar estos datos.
 
 ### Lado Receptor:
 
@@ -67,7 +67,7 @@ Desciframos el IV usando la clave privada del receptor
      ClaveSimetricaReceptor.Key = ClaveSimetricaKeyDescifrada;
      ClaveSimetricaReceptor.IV = ClaveSimetricaIVDescifrada;
 
-   - **Codigo utilizado**: El método `DescifrarMensaje` utiliza `RSA.Decrypt` con la clave privada del receptor para recuperar los bytes originales de la clave simétrica. Solo el receptor puede realizar esta operación, ya que es el único que posee la clave privada correspondiente a la clave pública que se usó para cifrar.
+   - **Explicacion código**: El método `DescifrarMensaje` utiliza `RSA.Decrypt` con la clave privada del receptor para recuperar los bytes originales de la clave simétrica. Solo el receptor puede realizar esta operación, ya que es el único que posee la clave privada correspondiente a la clave pública que se usó para cifrar.
 
 2. **Descifrado del mensaje**:
    - Con la clave simétrica recuperada, se descifra el mensaje utilizando AES
@@ -81,7 +81,7 @@ Desciframos el mensaje usando la clave simétrica recuperada, el método devuelv
 Convertimos el mensaje descifrado a bytes para poder verificar la firma
      byte[] MensajeDescifrado_Bytes = Encoding.UTF8.GetBytes(MensajeDescifrado);
 
-   - **Código implementado**: El método `DescifrarMensaje` crea un descifrador AES con la Key e IV recuperados, luego utiliza un `CryptoStream` para transformar los bytes cifrados de vuelta al texto original.
+   - **Explicacion código**: El método `DescifrarMensaje` crea un descifrador AES con la Key e IV recuperados, luego utiliza un `CryptoStream` para transformar los bytes cifrados de vuelta al texto original.
 3. **Verificación de la firma**:
    - Se utiliza la clave pública del emisor para verificar la firma
    - Se comprueba que el mensaje descifrado coincide con el mensaje que fue firmado
@@ -98,7 +98,7 @@ Mostramos el resultado de la verificación y el mensaje solo si la firma es vál
      } else {
          Console.WriteLine("La firma es INVÁLIDA. El mensaje podría haber sido alterado o no proviene del emisor esperado.");
      }
-   - **Código implementado**: El método `ComprobarFirma` utiliza `RSA.VerifyData` con la clave pública del emisor para verificar que la firma corresponda al mensaje descifrado. Verifica que el hash SHA512 del mensaje coincida con el hash descifrado de la firma, lo que confirma la autenticidad e integridad.
+   - **Explicacion código**: El método `ComprobarFirma` utiliza `RSA.VerifyData` con la clave pública del emisor para verificar que la firma corresponda al mensaje descifrado. Verifica que el hash SHA512 del mensaje coincida con el hash descifrado de la firma, lo que confirma la autenticidad e integridad.
 
 # ¿Crees que alguno de los métodos programado en la clase asimétrica se podría eliminar por carecer de una utilidad real?
 
