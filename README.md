@@ -17,3 +17,7 @@ Este proyecto implementa diferentes mecanismos de seguridad para la simulación 
 - `ClaveAsimetricaClass`: Biblioteca para cifrado asimétrico y firma digital
 
 Proyecto desarrollado como práctica para el curso ICB0009-UF1.
+
+# Parte #1
+
+El sistema de registro/login implementa un mecanismo de seguridad basado en hashing SHA512 con salt. Durante el registro, se genera un salt aleatorio que se combina con la contraseña antes de aplicar la función hash. En el login, se repite el mismo proceso con el salt almacenado y se compara el hash resultante con el guardado previamente. Este método evita almacenar contraseñas en texto plano y resiste ataques de diccionario y tablas rainbow.

@@ -8,8 +8,9 @@ namespace SimuladorEnvioRecepcion
 {
     class Program
     {   
-        static string UserName;
-        static string SecurePass;  
+        static string? UserName;
+        static string? SecurePass;  
+        static byte[]? Salt; // Variable para almacenar el salt
         static ClaveAsimetrica Emisor = new ClaveAsimetrica();
         static ClaveAsimetrica Receptor = new ClaveAsimetrica();
         static ClaveSimetrica ClaveSimetricaEmisor = new ClaveSimetrica();
@@ -23,18 +24,28 @@ namespace SimuladorEnvioRecepcion
             /****PARTE 1****/
             //Login / Registro
             Console.WriteLine ("¿Deseas registrarte? (S/N)");
-            string registro = Console.ReadLine ();
+            string? registro = Console.ReadLine();
 
-            if (registro =="S")
+            if (registro == "S" || registro == "s")
             {
                 //Realizar registro del cliente
                 Registro();                
+            }
+            else
+            {
+                Console.WriteLine("Nota: No se ha realizado registro. Debes registrarte antes de hacer login.");
             }
 
             //Realizar login
             bool login = Login();
 
             /***FIN PARTE 1***/
+
+            if (!login)
+            {
+                Console.WriteLine("No se pudo completar el login. El programa se cerrará.");
+                return; // Salir del programa si el login falla
+            }
 
             if (login)
             {                  
@@ -79,13 +90,50 @@ namespace SimuladorEnvioRecepcion
 
             /***PARTE 1***/
             /*Añadir el código para poder almacenar el password de manera segura*/
-
+            
+            // Generamos un salt aleatorio
+            Salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(Salt);
+            }
+            
+            // Generamos el hash del password usando SHA512 y el salt
+            using (var sha512 = SHA512.Create())
+            {
+                // Convertimos la contraseña a bytes
+                byte[] passwordBytes = Encoding.UTF8.GetBytes(passwordRegister);
+                
+                // Combinamos el salt y la contraseña
+                byte[] passwordWithSaltBytes = new byte[passwordBytes.Length + Salt.Length];
+                Buffer.BlockCopy(passwordBytes, 0, passwordWithSaltBytes, 0, passwordBytes.Length);
+                Buffer.BlockCopy(Salt, 0, passwordWithSaltBytes, passwordBytes.Length, Salt.Length);
+                
+                // Calculamos el hash
+                byte[] hashBytes = sha512.ComputeHash(passwordWithSaltBytes);
+                
+                // Convertimos el hash a string y lo guardamos
+                SecurePass = Convert.ToBase64String(hashBytes);
+            }
+            
+            Console.WriteLine("==============================================");
+            Console.WriteLine($"Usuario '{UserName}' registrado correctamente.");
+            Console.WriteLine("El password ha sido almacenado de forma segura.");
+            Console.WriteLine("==============================================");
         }
 
 
         public static bool Login()
         {
             bool auxlogin = false;
+
+            // Verificar si hay un usuario registrado
+            if (UserName == null)
+            {
+                Console.WriteLine("ERROR: No hay ningún usuario registrado. Debes registrarte primero.");
+                return false;
+            }
+
             do
             {
                 Console.WriteLine ("Acceso a la aplicación");
@@ -97,7 +145,43 @@ namespace SimuladorEnvioRecepcion
 
                 /***PARTE 1***/
                 /*Modificar esta parte para que el login se haga teniendo en cuenta que el registro se realizó con SHA512 y salt*/
-
+                
+                // Verificar el nombre de usuario
+                if (userName == UserName)
+                {
+                    // Verificar la contraseña usando el mismo proceso que en el registro
+                    using (var sha512 = SHA512.Create())
+                    {
+                        // Convertimos la contraseña a bytes
+                        byte[] passwordBytes = Encoding.UTF8.GetBytes(Password);
+                        
+                        // Combinamos con el salt que guardamos durante el registro
+                        byte[] passwordWithSaltBytes = new byte[passwordBytes.Length + Salt.Length];
+                        Buffer.BlockCopy(passwordBytes, 0, passwordWithSaltBytes, 0, passwordBytes.Length);
+                        Buffer.BlockCopy(Salt, 0, passwordWithSaltBytes, passwordBytes.Length, Salt.Length);
+                        
+                        // Calculamos el hash
+                        byte[] hashBytes = sha512.ComputeHash(passwordWithSaltBytes);
+                        
+                        // Convertimos a string para comparar
+                        string hashPassword = Convert.ToBase64String(hashBytes);
+                        
+                        // Comparamos con el hash guardado
+                        if (hashPassword == SecurePass)
+                        {
+                            Console.WriteLine("Login correcto.");
+                            auxlogin = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Password incorrecto. Inténtalo de nuevo.");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Usuario incorrecto. El usuario registrado es '{UserName}'. Inténtalo de nuevo.");
+                }
 
             }while (!auxlogin);
 
